@@ -1,3 +1,4 @@
+global using dotnet_rpg.Dtos.Character;
 global using dotnet_rpg.Models;
 global using dotnet_rpg.Services.CharacterService;
 
