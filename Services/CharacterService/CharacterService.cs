@@ -67,7 +67,7 @@ namespace dotnet_rpg.Services.CharacterService
             }
             catch (Exception ex)
             {
-                serviceResponse.Success = false;
+                serviceResponse.Success = true;
                 serviceResponse.Message = ex.Message;
             }
 
