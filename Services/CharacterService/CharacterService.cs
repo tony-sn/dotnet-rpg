@@ -49,14 +49,14 @@ namespace dotnet_rpg.Services.CharacterService
 
             try
             {
-                var character = await _context.Characters.FirstOrDefaultAsync(c => c.Id == id);
+                var character = await _context.Characters.FirstOrDefaultAsync(c => c.Id == id && c.User!.Id == GetUserId());
                 if (character is null)
                     throw new Exception($"Character with Id '{id}' not found.");
 
                 _context.Characters.Remove(character);
                 await _context.SaveChangesAsync();
                 serviceResponse.Data =
-                    await _context.Characters.Select(c => _mapper.Map<GetCharacterDto>(c)).ToListAsync();
+                    await _context.Characters.Where(c => c.User!.Id == GetUserId()).Select(c => _mapper.Map<GetCharacterDto>(c)).ToListAsync();
             }
             catch (Exception ex)
             {
@@ -78,7 +78,7 @@ namespace dotnet_rpg.Services.CharacterService
         public async Task<ServiceResponse<GetCharacterDto>> GetCharacterById(int id)
         {
             var serviceResponse = new ServiceResponse<GetCharacterDto>();
-            var dbCharacter = await _context.Characters.FirstOrDefaultAsync(c => c.Id == id);
+            var dbCharacter = await _context.Characters.FirstOrDefaultAsync(c => c.Id == id && c.User!.Id == GetUserId());
             serviceResponse.Data = _mapper.Map<GetCharacterDto>(dbCharacter);
             return serviceResponse;
         }
