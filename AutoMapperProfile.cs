@@ -1,3 +1,4 @@
+using dotnet_rpg.Dtos.Skill;
 using dotnet_rpg.Dtos.Weapon;
 
 namespace dotnet_rpg;
@@ -10,6 +11,7 @@ public class AutoMapperProfile: Profile
         CreateMap<AddCharacterDto, Character>();
         CreateMap<UpdateCharacterDto, Character>();
         CreateMap<Weapon, GetWeaponDto>();
+        CreateMap<Skill, GetSkillDto>();
     }
     
 }
