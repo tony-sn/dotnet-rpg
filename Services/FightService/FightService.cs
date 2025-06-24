@@ -5,9 +5,11 @@ namespace dotnet_rpg.Services.FightService;
 public class FightService : IFightService
 {
     private readonly DataContext _context;
+    private readonly IMapper _mapper;
 
-    public FightService(DataContext context)
+    public FightService(DataContext context, IMapper mapper)
     {
+        _mapper = mapper;
         _context = context;
     }
 
@@ -159,11 +161,6 @@ public class FightService : IFightService
             if (attacker is null || opponent is null || attacker.Weapon is null)
                 throw new Exception("Something fishy is going on here...");
 
-            // int damage = attacker.Weapon.Damage + (new Random().Next(attacker.Strength));
-            // damage -= new Random().Next(opponent.Defeats);
-            //
-            // if (damage > 0)
-            //     opponent.HitPoints -= damage;
             int damage = DoWeaponAttack(attacker, opponent);
 
             if (opponent.HitPoints <= 0)
@@ -198,5 +195,21 @@ public class FightService : IFightService
 
         if (damage > 0) opponent.HitPoints -= damage;
         return damage;
+    }
+
+    public async Task<ServiceResponse<List<HighscoreDto>>> GetHighscore()
+    {
+        var characters = await _context.Characters
+            .Where(c => c.Fights > 0)
+            .OrderByDescending(c => c.Victories)
+            .ThenBy(c => c.Defeats)
+            .ToListAsync();
+
+        var response = new ServiceResponse<List<HighscoreDto>>()
+        {
+            Data = characters.Select(c => _mapper.Map<HighscoreDto>(c)).ToList()
+        };
+
+        return response;
     }
 }
