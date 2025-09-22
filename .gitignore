@@ -479,3 +479,4 @@ appsettings.Development.json
 appsettings.*
 .idea/
 Migrations/
+appsettings.Development.json
